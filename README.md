@@ -10,3 +10,4 @@ My software renderer written in C++, mainly for practicing computer graphics, an
 - no vertex buffers -- every buffer for rendering is an uniformed 1D array, forcing explicit control
 - dedicated shading language WHSL with an embedded bytecode VM, allowing hot reloads
 - tolerant for errors like out of bounds, but will provide information for debugging
+- load models via WaveFront OBJ format

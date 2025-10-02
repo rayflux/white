@@ -100,6 +100,10 @@ void RenderPassEncoder::draw(u32 vertex_cnt [[maybe_unused]]) {
 				}
 			}
 			if (check_mask == 0 || check_mask == 7) {
+				shader_context._BuiltinPosition.x = static_cast<f32>(x);
+				shader_context._BuiltinPosition.y = static_cast<f32>(y);
+				shader_context._BuiltinPosition.z = -1.0f;  // TODO: interp-ed depth
+				shader_context._BuiltinPosition.w = -1.0f;  // TODO: reciprocal
 				shader->fragment(shader_context);
 				framebuffer->write_RGBA32FLOAT(x, y, shader_context._BuiltinFragColor);
 			}

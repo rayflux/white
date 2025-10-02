@@ -11,6 +11,8 @@
 namespace white {
 
 struct ShaderContext {
+	// TODO: add interstage variables (interp, flat, different data types)
+
 	glm::vec4 _BuiltinPosition;
 	glm::vec4 _BuiltinFragColor;
 	u32 _BuiltinVertexID;

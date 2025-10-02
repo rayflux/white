@@ -16,7 +16,10 @@ void TestShader::vertex(ShaderContext &shader_context) {
 }
 
 void TestShader::fragment(ShaderContext &shader_context) {
-	shader_context._BuiltinFragColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	shader_context._BuiltinFragColor = glm::vec4(shader_context._BuiltinPosition.x / 800.0f,
+	                                             shader_context._BuiltinPosition.y / 600.0f,
+	                                             0.0f,
+	                                             1.0f);
 }
 
 }  // namespace white::shader
