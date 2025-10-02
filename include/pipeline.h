@@ -9,7 +9,7 @@
 namespace white {
 
 struct Pipeline {
-	std::shared_ptr<ShaderModule> _ShaderModule;
+	std::shared_ptr<IShaderModule> _ShaderModule;
 	PrimitiveType _PrimitiveType;
 };
 

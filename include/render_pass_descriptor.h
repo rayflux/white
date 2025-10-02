@@ -1,6 +1,7 @@
 #pragma once
 
-#include <buffer.h>
+#include <texture.h>
+#include <type.h>
 
 #include <glm/glm.hpp>
 
@@ -15,13 +16,17 @@ enum class ColorAttachmentLoadOp {
 };
 
 struct ColorAttachment {
-	std::shared_ptr<Buffer> _Buffer;
+	std::shared_ptr<Texture> _Texture;
 	ColorAttachmentLoadOp _LoadOp;
 	glm::vec4 _ClearValue;
 };
 
 struct RenderPassDescriptor {
 	std::vector<ColorAttachment> _ColorAttachmentVec;
+	u32 _ViewportWidth;
+	u32 _ViewportHeight;
+	u32 _ViewportTopLeftX;
+	u32 _ViewportTopLeftY;
 };
 
 }  // namespace white

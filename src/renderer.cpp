@@ -6,15 +6,12 @@
 #include <stb_image_write.h>
 #pragma clang diagnostic pop
 
-#include <cstring>
-
 namespace white {
 
 Renderer::Renderer(u32 framebuffer_width, u32 framebuffer_height)
     : _FramebufferWidth(framebuffer_width)
     , _FramebufferHeight(framebuffer_height) {
-	const u32 framebuffer_size_in_bytes = _FramebufferWidth * _FramebufferHeight * 4 * sizeof(f32);  // RGBA in f32
-	_Framebuffer = create_buffer(framebuffer_size_in_bytes);
+	_Framebuffer = create_texture(_FramebufferWidth, _FramebufferHeight, TextureFormat::RGBA32FLOAT);
 }
 
 std::shared_ptr<BindGroup> Renderer::create_bind_group(const std::vector<BindGroupEntry> &bind_group_entry_vec) {
@@ -33,13 +30,22 @@ std::shared_ptr<Buffer> Renderer::create_buffer(u32 size_in_bytes) {
 	return buffer;
 }
 
-std::shared_ptr<ShaderModule> Renderer::create_shader_module(const std::string &shader_src_path [[maybe_unused]]) {
-	auto shader_module = std::make_shared<ShaderModule>();
+std::shared_ptr<Texture> Renderer::create_texture(u32 width, u32 height, TextureFormat texture_format) {
+	auto texture = std::make_shared<Texture>();
 
-	return shader_module;
+	u32 space_multiplier = 0;
+	switch (texture_format) {
+	case TextureFormat::RGBA32FLOAT: space_multiplier = 4 * 4; break;
+	}
+
+	texture->_Width = width;
+	texture->_Height = height;
+	texture->_Buffer._Data.resize(width * height * space_multiplier);
+
+	return texture;
 }
 
-std::shared_ptr<Pipeline> Renderer::create_pipeline(PrimitiveType primitive_type, const std::shared_ptr<ShaderModule> &shader_module) {
+std::shared_ptr<Pipeline> Renderer::create_pipeline(PrimitiveType primitive_type, const std::shared_ptr<IShaderModule> &shader_module) {
 	auto pipeline = std::make_shared<Pipeline>();
 
 	pipeline->_PrimitiveType = primitive_type;
@@ -48,12 +54,12 @@ std::shared_ptr<Pipeline> Renderer::create_pipeline(PrimitiveType primitive_type
 	return pipeline;
 }
 
-RenderPassEncoder Renderer::begin_render_pass() {
-	return {};
+RenderPassEncoder Renderer::begin_render_pass(const RenderPassDescriptor &render_pass_descriptor) {
+	return RenderPassEncoder{ render_pass_descriptor };
 }
 
 void Renderer::save_framebuffer_to_file(const std::string &filename) const {
-	const auto &framebuffer = _Framebuffer->_Data;
+	const auto &framebuffer = _Framebuffer->_Buffer._Data;
 
 	const u32 framebuffer_quant_size_in_bytes = _FramebufferWidth * _FramebufferHeight * 4;
 	std::vector<uint8_t> framebuffer_quant(framebuffer_quant_size_in_bytes);
@@ -79,7 +85,7 @@ void Renderer::save_framebuffer_to_file(const std::string &filename) const {
 	               0);
 }
 
-std::shared_ptr<Buffer> Renderer::get_framebuffer() {
+std::shared_ptr<Texture> Renderer::get_framebuffer() {
 	return _Framebuffer;
 }
 

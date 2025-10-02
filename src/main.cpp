@@ -1,15 +1,18 @@
 #include <render_pass_descriptor.h>
 #include <renderer.h>
+#include <shader/test.h>
 
 #include <array>
-#include <cstring>
 #include <string>
 #include <vector>
 
 using namespace white;
 
+constexpr u32 WIDTH = 800;
+constexpr u32 HEIGHT = 600;
+
 int main() {
-	Renderer renderer(800, 600);
+	Renderer renderer(WIDTH, HEIGHT);
 
 	constexpr size_t vertices_size_in_bytes = 3 * 2 * 4;  // 3 vertices, 2 comps each, all f32 (4 bytes)
 	auto vertices = renderer.create_buffer(vertices_size_in_bytes);
@@ -30,19 +33,23 @@ int main() {
 	}
 	auto bind_group = renderer.create_bind_group(bind_group_entry_vec);
 
-	auto shader_module = renderer.create_shader_module("assets/test.whsl");
+	auto shader_module = std::make_shared<shader::TestShader>();
 	auto pipeline = renderer.create_pipeline(PrimitiveType::TRIANGLE, shader_module);
 
 	auto render_pass_descriptor = RenderPassDescriptor{};
 	{
 		ColorAttachment attachment;
-		attachment._Buffer = renderer.get_framebuffer();
+		attachment._Texture = renderer.get_framebuffer();
 		attachment._ClearValue = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 		attachment._LoadOp = ColorAttachmentLoadOp::CLEAR;
 		render_pass_descriptor._ColorAttachmentVec.push_back(attachment);
 	}
+	render_pass_descriptor._ViewportWidth = WIDTH;
+	render_pass_descriptor._ViewportHeight = HEIGHT;
+	render_pass_descriptor._ViewportTopLeftX = 0;
+	render_pass_descriptor._ViewportTopLeftY = 0;
 
-	auto render_pass = renderer.begin_render_pass();
+	auto render_pass = renderer.begin_render_pass(render_pass_descriptor);
 	render_pass.set_bind_group(bind_group);
 	render_pass.set_pipeline(pipeline);
 	render_pass.draw(3);
