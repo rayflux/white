@@ -48,12 +48,8 @@ std::shared_ptr<Pipeline> Renderer::create_pipeline(PrimitiveType primitive_type
 	return pipeline;
 }
 
-std::shared_ptr<CommandEncoder> Renderer::create_command_encoder() {
-	auto command_encoder = std::make_shared<CommandEncoder>();
-	return command_encoder;
-}
-
-void Renderer::submit(const CommandBuffer &command_buffer [[maybe_unused]]) {
+RenderPassEncoder Renderer::begin_render_pass() {
+	return {};
 }
 
 void Renderer::save_framebuffer_to_file(const std::string &filename) const {

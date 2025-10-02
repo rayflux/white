@@ -32,7 +32,6 @@ int main() {
 
 	auto shader_module = renderer.create_shader_module("assets/test.whsl");
 	auto pipeline = renderer.create_pipeline(PrimitiveType::TRIANGLE, shader_module);
-	auto command_encoder = renderer.create_command_encoder();
 
 	auto render_pass_descriptor = RenderPassDescriptor{};
 	{
@@ -43,14 +42,11 @@ int main() {
 		render_pass_descriptor._ColorAttachmentVec.push_back(attachment);
 	}
 
-	auto render_pass = command_encoder->begin_render_pass();
+	auto render_pass = renderer.begin_render_pass();
 	render_pass.set_bind_group(bind_group);
 	render_pass.set_pipeline(pipeline);
 	render_pass.draw(3);
 	render_pass.end();
-
-	auto command_buffer = command_encoder->finish();
-	renderer.submit(command_buffer);
 
 	renderer.save_framebuffer_to_file("output.png");
 
