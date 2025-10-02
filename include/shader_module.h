@@ -6,8 +6,7 @@
 
 namespace white {
 
-struct Buffer {
-	std::vector<u8> _Data;
+struct ShaderModule {
 };
 
 }  // namespace white

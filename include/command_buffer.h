@@ -1,12 +1,10 @@
 #pragma once
 
-#include <string>
-
 namespace white {
 
-class Object {
+class CommandBuffer {
+private:
 public:
-	std::string _Label;
 };
 
 }  // namespace white
