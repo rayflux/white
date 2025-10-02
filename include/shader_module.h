@@ -6,8 +6,8 @@ namespace white {
 
 class IShaderModule {
 public:
-	virtual void vertex(ShaderContext &shader_context) = 0;
-	virtual void fragment(ShaderContext &shader_context) = 0;
+	virtual void vertex(ShaderContext &shader_context) const = 0;
+	virtual void fragment(ShaderContext &shader_context) const = 0;
 };
 
 }  // namespace white

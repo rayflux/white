@@ -6,8 +6,8 @@ namespace white::shader {
 
 class TestShader : public IShaderModule {
 public:
-	void vertex(ShaderContext &shader_context) override;
-	void fragment(ShaderContext &shader_context) override;
+	void vertex(ShaderContext &shader_context) const override;
+	void fragment(ShaderContext &shader_context) const override;
 };
 
 }  // namespace white::shader
