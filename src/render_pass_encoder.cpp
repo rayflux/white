@@ -20,6 +20,20 @@ void RenderPassEncoder::set_pipeline(const std::shared_ptr<Pipeline> &pipeline) 
 }
 
 void RenderPassEncoder::draw(u32 vertex_cnt [[maybe_unused]]) {
+	// clear color attachments
+	for (auto &attachment : _RenderPassDescriptor._ColorAttachmentVec) {
+		if (attachment._LoadOp == ColorAttachmentLoadOp::CLEAR) {
+			auto &texture = attachment._Texture;
+			auto width = texture->_Width;
+			auto height = texture->_Height;
+			for (u32 y = 0; y < height; y++) {
+				for (u32 x = 0; x < width; x++) {
+					texture->write_RGBA32FLOAT(x, y, attachment._ClearValue);  // FIXME: assume texture format is RGBA32FLOAT
+				}
+			}
+		}
+	}
+
 	std::vector<glm::vec4> processed_vertices(vertex_cnt);
 
 	auto framebuffer = _RenderPassDescriptor._ColorAttachmentVec[0]._Texture;
@@ -105,7 +119,7 @@ void RenderPassEncoder::draw(u32 vertex_cnt [[maybe_unused]]) {
 				shader_context._BuiltinPosition.z = -1.0f;  // TODO: interp-ed depth
 				shader_context._BuiltinPosition.w = -1.0f;  // TODO: reciprocal
 				shader->fragment(shader_context);
-				framebuffer->write_RGBA32FLOAT(x, y, shader_context._BuiltinFragColor);
+				framebuffer->write_RGBA32FLOAT(x, y, shader_context._BuiltinFragColor);  // assume framebuffer format is RGBA32FLOAT
 			}
 		}
 	}
