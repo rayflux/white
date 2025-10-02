@@ -17,6 +17,7 @@ Renderer::Renderer(u32 framebuffer_width, u32 framebuffer_height)
 std::shared_ptr<BindGroup> Renderer::create_bind_group(const std::vector<BindGroupEntry> &bind_group_entry_vec) {
 	auto bind_group = std::make_shared<BindGroup>();
 
+	// TODO: validate binding points, and possibily reorder it
 	bind_group->_BindGroupEntryVec = bind_group_entry_vec;
 
 	return bind_group;
@@ -69,8 +70,8 @@ void Renderer::save_framebuffer_to_file(const std::string &filename) const {
 			u32 offset = (x + (y * _FramebufferWidth)) * 4;
 
 			for (u32 c = 0; c < 4; c++) {
-				float channel_value = 0.0f;
-				std::memcpy(&channel_value, framebuffer.data() + (offset * sizeof(f32)) + c, sizeof(f32));
+				f32 channel_value = 0.0f;
+				std::memcpy(&channel_value, framebuffer.data() + ((offset + c) * sizeof(f32)), sizeof(f32));
 				framebuffer_quant[offset + c] = static_cast<u8>(channel_value * 255.0f);
 			}
 		}
