@@ -29,6 +29,9 @@ public:
 	std::shared_ptr<CommandEncoder> create_command_encoder();
 
 	void submit(const CommandBuffer &command_buffer);
+	void save_framebuffer_to_file(const std::string &filename) const;
+
+	[[nodiscard]] std::shared_ptr<Buffer> get_framebuffer();
 };
 
 }  // namespace white

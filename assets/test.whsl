@@ -1,0 +1,10 @@
+buffer<0> vertices: vec2[];
+
+fn vertex(@builtin(position) pos: vec3) {
+    let id = @builtin(vertex_id);
+    pos = vec4(vertices[id].x, vertices[id].y, 0.0, 1.0);
+}
+
+fn fragment(@builtin(frag_color) frag_color: vec4) {
+    frag_color = vec4(1.0, 0.0, 0.0, 1.0);
+}
